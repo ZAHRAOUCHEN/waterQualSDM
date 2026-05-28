@@ -36,24 +36,41 @@ library(waterQualSDM)
 library(sf)
 library(terra)
 
-# 1. Import des données
-wq_data  <- import_water_quality_data("stations.csv")
-watershed <- import_watershed("bassins.geojson")
-dem       <- load_dem("mnt.tif")
-landuse   <- import_landuse_data("landuse.tif")
+# 1. Import des données d'exemple
+file_wq  <- system.file("extdata", "water_quality.csv", 
+                         package = "waterQualSDM")
+file_ws  <- system.file("extdata", "watersheds.geojson", 
+                         package = "waterQualSDM")
+file_dem <- system.file("extdata", "dem.tif", 
+                         package = "waterQualSDM")
+file_lu  <- system.file("extdata", "landuse.tif", 
+                         package = "waterQualSDM")
+file_rv  <- system.file("extdata", "rivers.geojson", 
+                         package = "waterQualSDM")
+
+wq_data  <- import_water_quality_data(file_wq)
+watershed <- import_watershed(file_ws)
+dem       <- load_dem(file_dem)
+landuse   <- import_landuse_data(file_lu)
+rivers    <- sf::st_read(file_rv, quiet = TRUE)
 
 # 2. Variables environnementales
 hydro    <- calculate_hydrological_variables(dem, rivers, watershed)
 features <- extract_environmental_features(wq_data$sf, landuse, hydro)
 
+# Exclure les variables non spatiales
+features_spatial <- features[, !names(features) %in% 
+                               c("phosphates", "station_id", "date")]
+
 # 3. Prétraitement
-data_prep <- preprocess_data(features, target = "nitrates")
+data_prep <- preprocess_data(features_spatial, target = "nitrates")
 
 # 4. Modélisation Random Forest
-model_result <- train_rf_model(data_prep)
+model_result <- train_rf_model(data_prep, ntrees = 500, tune = TRUE)
 
 # 5. Évaluation
 eval_result <- evaluate_model(model_result, data_prep)
+print(eval_result$metrics)
 
 # 6. Prédiction spatiale
 nitrates_map <- predict_water_quality(model_result, landuse, hydro$raster)
@@ -171,13 +188,6 @@ data(rivers_sf)
 
 # Aperçu des stations de mesure
 head(water_quality)
-#>   station_id longitude latitude       date nitrates phosphates
-#> 1      ST001 -1.585194 47.33343 2020-03-22    22.83      0.477
-#> 2      ST002 -1.562925 47.34675 2022-07-02    23.17      0.740
-#> 3      ST003 -2.213860 47.39849 2020-11-20    34.33      0.406
-#> 4      ST004 -1.669552 47.78469 2023-10-15    33.22      0.490
-#> 5      ST005 -1.858254 47.03894 2022-08-08    38.92      0.483
-#> 6      ST006 -1.980904 47.74880 2020-10-22    20.24      0.322
 ```
 
 ------------------------------------------------------------------------

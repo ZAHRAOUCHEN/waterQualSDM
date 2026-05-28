@@ -47,24 +47,41 @@ library(waterQualSDM)
 library(sf)
 library(terra)
 
-# 1. Import des données
-wq_data  <- import_water_quality_data("stations.csv")
-watershed <- import_watershed("bassins.geojson")
-dem       <- load_dem("mnt.tif")
-landuse   <- import_landuse_data("landuse.tif")
+# 1. Import des données d'exemple
+file_wq  <- system.file("extdata", "water_quality.csv", 
+                         package = "waterQualSDM")
+file_ws  <- system.file("extdata", "watersheds.geojson", 
+                         package = "waterQualSDM")
+file_dem <- system.file("extdata", "dem.tif", 
+                         package = "waterQualSDM")
+file_lu  <- system.file("extdata", "landuse.tif", 
+                         package = "waterQualSDM")
+file_rv  <- system.file("extdata", "rivers.geojson", 
+                         package = "waterQualSDM")
+
+wq_data  <- import_water_quality_data(file_wq)
+watershed <- import_watershed(file_ws)
+dem       <- load_dem(file_dem)
+landuse   <- import_landuse_data(file_lu)
+rivers    <- sf::st_read(file_rv, quiet = TRUE)
 
 # 2. Variables environnementales
 hydro    <- calculate_hydrological_variables(dem, rivers, watershed)
 features <- extract_environmental_features(wq_data$sf, landuse, hydro)
 
+# Exclure les variables non spatiales
+features_spatial <- features[, !names(features) %in% 
+                               c("phosphates", "station_id", "date")]
+
 # 3. Prétraitement
-data_prep <- preprocess_data(features, target = "nitrates")
+data_prep <- preprocess_data(features_spatial, target = "nitrates")
 
 # 4. Modélisation Random Forest
-model_result <- train_rf_model(data_prep)
+model_result <- train_rf_model(data_prep, ntrees = 500, tune = TRUE)
 
 # 5. Évaluation
 eval_result <- evaluate_model(model_result, data_prep)
+print(eval_result$metrics)
 
 # 6. Prédiction spatiale
 nitrates_map <- predict_water_quality(model_result, landuse, hydro$raster)
@@ -84,6 +101,7 @@ print(cartes$carte_nitrates)
 print(cartes$carte_vulnerabilite)
 print(cartes$carte_bassins)
 ```
+
 
 ## Exemples de résultats
 
@@ -154,7 +172,7 @@ waterQualSDM/
 
 Le package inclut des données simulées pour tester toutes les fonctions :
 
-```{r}
+```{r eval=FALSE}
 library(waterQualSDM)
 
 # Charger les données d'exemple
