@@ -1,1 +1,264 @@
+---
+title: "Introduction à waterQualSDM"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction à waterQualSDM}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  warning = FALSE,
+  message = FALSE,
+  fig.width = 8,
+  fig.height = 6
+)
+devtools::load_all()
+library(sf)
+library(terra)
+```
+
+## Introduction
+
+`waterQualSDM` est un package R pour analyser et modéliser la qualité de l'eau
+dans les bassins versants agricoles. Il permet de :
+
+- Importer et nettoyer les données de qualité de l'eau
+- Calculer des variables environnementales spatiales
+- Prédire les concentrations en nitrates avec Random Forest
+- Cartographier les zones vulnérables à la pollution
+- Générer des recommandations de gestion durable
+
+---
+
+## Étape 1 — Import des données
+
+### Données qualité de l'eau
+
+```{r}
+file_wq <- system.file("extdata", "water_quality.csv", 
+                        package = "waterQualSDM")
+wq_data <- import_water_quality_data(file_wq)
+head(wq_data$dataframe)
+```
+
+### Bassins versants
+
+```{r}
+file_ws <- system.file("extdata", "watersheds.geojson", 
+                        package = "waterQualSDM")
+watershed <- import_watershed(file_ws)
+print(watershed)
+```
+
+### Modèle Numérique de Terrain
+
+```{r}
+file_dem <- system.file("extdata", "dem.tif", 
+                         package = "waterQualSDM")
+dem <- load_dem(file_dem)
+print(dem)
+```
+
+### Occupation du sol
+
+```{r}
+file_lu <- system.file("extdata", "landuse.tif", 
+                        package = "waterQualSDM")
+landuse <- import_landuse_data(file_lu)
+print(landuse)
+```
+
+---
+
+## Étape 2 — Variables environnementales
+
+### Variables hydrologiques
+
+```{r}
+file_rv <- system.file("extdata", "rivers.geojson", 
+                        package = "waterQualSDM")
+rivers <- sf::st_read(file_rv, quiet = TRUE)
+
+hydro <- calculate_hydrological_variables(dem, rivers, watershed)
+print(hydro$raster)
+```
+
+### Variables moyennes par bassin versant
+
+```{r}
+print(hydro$basin_vars)
+```
+
+### Extraction des features aux stations
+
+```{r}
+features <- extract_environmental_features(
+  water_quality = wq_data$sf,
+  landuse       = landuse,
+  hydro         = hydro
+)
+
+# Exclure les variables non spatiales
+features_spatial <- features[, !names(features) %in% 
+                               c("phosphates", "station_id", "date")]
+head(features_spatial)
+```
+
+---
+
+## Étape 3 — Prétraitement des données
+
+```{r}
+data_prep <- preprocess_data(
+  df        = features_spatial,
+  target    = "nitrates",
+  test_size = 0.2,
+  normalize = TRUE
+)
+
+cat("Taille train :", nrow(data_prep$train), "\n")
+cat("Taille test  :", nrow(data_prep$test),  "\n")
+cat("Variables    :", paste(data_prep$feature_names, collapse = ", "), "\n")
+```
+
+---
+
+## Étape 4 — Modélisation Random Forest
+
+```{r}
+model_result <- train_rf_model(
+  data_prep = data_prep,
+  target    = "nitrates",
+  ntrees    = 500,
+  tune      = TRUE
+)
+```
+
+### Importance des variables
+
+```{r}
+print(model_result$importance)
+```
+
+---
+
+## Étape 5 — Évaluation du modèle
+
+```{r}
+eval_result <- evaluate_model(model_result, data_prep)
+knitr::kable(eval_result$metrics, caption = "Métriques de performance")
+```
+
+### Observed vs Predicted
+
+```{r}
+print(eval_result$plot_obs_pred)
+```
+
+### Graphique des résidus
+
+```{r}
+print(eval_result$plot_residuals)
+```
+
+### Importance des variables
+
+```{r}
+print(eval_result$plot_importance)
+```
+
+---
+
+## Étape 6 — Prédiction spatiale
+
+```{r}
+nitrates_map <- predict_water_quality(
+  model_result = model_result,
+  landuse      = landuse,
+  hydro        = hydro$raster
+)
+print(nitrates_map)
+```
+
+---
+
+## Étape 7 — Indice de vulnérabilité
+
+```{r}
+vuln_map <- calculate_vulnerability_index(
+  nitrates_raster = nitrates_map,
+  landuse         = landuse,
+  hydro           = hydro$raster
+)
+print(vuln_map)
+```
+
+---
+
+## Étape 8 — Résumé par bassin versant
+
+```{r}
+summary_df <- summarize_watersheds(
+  watershed       = watershed,
+  nitrates_raster = nitrates_map,
+  vuln_raster     = vuln_map,
+  landuse         = landuse
+)
+knitr::kable(summary_df, caption = "Résumé par bassin versant")
+```
+
+---
+
+## Étape 9 — Recommandations de gestion
+
+```{r}
+recommendations <- generate_recommendations(summary_df)
+knitr::kable(
+  recommendations[, c("basin_name", "risk_class", "recommandations")],
+  caption = "Recommandations par bassin versant"
+)
+```
+
+---
+
+## Étape 10 — Cartographie
+
+### Carte des nitrates
+
+```{r}
+cartes <- plot_water_quality_map(
+  nitrates_raster = nitrates_map,
+  vuln_raster     = vuln_map,
+  watershed       = watershed
+)
+print(cartes$carte_nitrates)
+```
+
+### Carte de vulnérabilité
+
+```{r}
+print(cartes$carte_vulnerabilite)
+```
+
+### Carte des bassins versants
+
+```{r}
+print(cartes$carte_bassins)
+```
+
+---
+
+## Conclusion
+
+Ce pipeline complet permet de :
+
+1. **Importer** des données terrain et spatiales
+2. **Calculer** des variables environnementales
+3. **Modéliser** les concentrations en nitrates avec Random Forest
+4. **Prédire** spatialement la qualité de l'eau
+5. **Identifier** les zones vulnérables
+6. **Générer** des recommandations de gestion durable

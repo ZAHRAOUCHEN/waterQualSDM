@@ -29,7 +29,7 @@ predict_water_quality <- function(model_result, landuse, hydro, output_file = NU
 
   # Remettre dans un raster
   result_raster        <- landuse[[1]]
-  values(result_raster) <- predictions
+  terra::values(result_raster) <- predictions
   names(result_raster)  <- "nitrates_predicted"
 
   # Export GeoTIFF si demandé

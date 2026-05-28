@@ -23,11 +23,11 @@ knitr::opts_chunk$set(
 
 ## Fonctionnalités principales
 
-- 📥 **Import** des données qualité eau, occupation du sol, MNT et bassins versants
-- 🌍 **Calcul** des variables environnementales spatiales
-- 🤖 **Modélisation** par Random Forest pour prédire les nitrates
-- 🗺️ **Cartographie** des zones vulnérables à la pollution
-- 📋 **Recommandations** automatiques de gestion durable
+-  **Import** des données qualité eau, occupation du sol, MNT et bassins versants
+-  **Calcul** des variables environnementales spatiales
+-  **Modélisation** par Random Forest pour prédire les nitrates
+- ️ **Cartographie** des zones vulnérables à la pollution
+-  **Recommandations** automatiques de gestion durable
 
 ---
 
@@ -83,6 +83,23 @@ cartes <- plot_water_quality_map(nitrates_map, vuln_map, watershed)
 print(cartes$carte_nitrates)
 print(cartes$carte_vulnerabilite)
 print(cartes$carte_bassins)
+## Exemples de résultats
+
+### Carte des concentrations en nitrates
+
+![Carte des nitrates](carte_nitrates.png)
+
+### Carte de vulnérabilité
+
+![Carte de vulnérabilité](carte_vulnerabilite.png)
+
+### Carte des bassins versants
+
+![Carte des bassins versants](carte_bassins.png)
+
+### Évaluation du modèle — Observed vs Predicted
+
+![Observed vs Predicted](obs_vs_pred.png)
 ```
 
 ---

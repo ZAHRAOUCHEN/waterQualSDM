@@ -11,12 +11,12 @@ les **concentrations en nitrates**.
 
 ## Fonctionnalités principales
 
-- 📥 **Import** des données qualité eau, occupation du sol, MNT et
+-  **Import** des données qualité eau, occupation du sol, MNT et
   bassins versants
-- 🌍 **Calcul** des variables environnementales spatiales
-- 🤖 **Modélisation** par Random Forest pour prédire les nitrates
-- 🗺️ **Cartographie** des zones vulnérables à la pollution
-- 📋 **Recommandations** automatiques de gestion durable
+-  **Calcul** des variables environnementales spatiales
+-  **Modélisation** par Random Forest pour prédire les nitrates
+- ️ **Cartographie** des zones vulnérables à la pollution
+-  **Recommandations** automatiques de gestion durable
 
 ------------------------------------------------------------------------
 
@@ -72,6 +72,23 @@ cartes <- plot_water_quality_map(nitrates_map, vuln_map, watershed)
 print(cartes$carte_nitrates)
 print(cartes$carte_vulnerabilite)
 print(cartes$carte_bassins)
+## Exemples de résultats
+
+### Carte des concentrations en nitrates
+
+![Carte des nitrates](man/figures/carte_nitrates.png)
+
+### Carte de vulnérabilité
+
+![Carte de vulnérabilité](man/figures/carte_vulnerabilite.png)
+
+### Carte des bassins versants
+
+![Carte des bassins versants](man/figures/carte_bassins.png)
+
+### Évaluation du modèle — Observed vs Predicted
+
+![Observed vs Predicted](man/figures/obs_vs_pred.png)
 ```
 
 ------------------------------------------------------------------------
@@ -147,7 +164,7 @@ head(water_quality)
 ## Auteur
 
 - **ZAHRAOUCHEN**
-- Email : <zahra.ouchen@iav.ac.com>
+- Email : <ouchenzahra2005@gmail.com>
 
 ------------------------------------------------------------------------
 

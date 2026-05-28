@@ -107,8 +107,8 @@ extract_environmental_features <- function(water_quality, landuse, hydro,
     message("Aucune donnée pluie fournie. Variable ignorée.")
   }
 
-  # Agrégation spatiale simple : moyenne par classe d'occupation du sol
-  df$landuse <- as.factor(df$landuse)
+  # Garder landuse comme numérique
+  df$landuse <- as.numeric(vals_landuse[, 2])
 
   message("Extraction environnementale terminée : ", ncol(df), " variables, ",
           nrow(df), " stations.")

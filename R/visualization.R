@@ -43,9 +43,11 @@ plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, outp
   vuln_df <- as.data.frame(vuln_raster, xy = TRUE)
   names(vuln_df) <- c("x", "y", "vulnerability")
   vuln_df <- vuln_df[!is.na(vuln_df$vulnerability), ]
-  vuln_df$vulnerability <- factor(vuln_df$vulnerability,
-                                  levels = 1:3,
-                                  labels = c("Faible", "Moyen", "Élevé"))
+  vuln_df$vulnerability <- factor(
+    as.numeric(vuln_df$vulnerability),
+    levels = 1:3,
+    labels = c("Faible", "Moyen", "Élevé")
+  )
 
   p2 <- ggplot2::ggplot() +
     ggplot2::geom_raster(
