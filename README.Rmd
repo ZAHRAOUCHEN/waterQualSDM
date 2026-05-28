@@ -87,19 +87,19 @@ print(cartes$carte_bassins)
 
 ### Carte des concentrations en nitrates
 
-![Carte des nitrates](carte_nitrates.png)
+![Carte des nitrates](https://raw.githubusercontent.com/ZAHRAOUCHEN/waterQualSDM/master/man/figures/carte_nitrates.png)
 
 ### Carte de vulnérabilité
 
-![Carte de vulnérabilité](carte_vulnerabilite.png)
+![Carte de vulnérabilité](https://raw.githubusercontent.com/ZAHRAOUCHEN/waterQualSDM/master/man/figures/carte_vulnerabilite.png)
 
 ### Carte des bassins versants
 
-![Carte des bassins versants](carte_bassins.png)
+![Carte des bassins versants](https://raw.githubusercontent.com/ZAHRAOUCHEN/waterQualSDM/master/man/figures/carte_bassins.png)
 
 ### Évaluation du modèle — Observed vs Predicted
 
-![Observed vs Predicted](obs_vs_pred.png)
+![Observed vs Predicted](https://raw.githubusercontent.com/ZAHRAOUCHEN/waterQualSDM/master/man/figures/obs_vs_pred.png)
 ```
 
 ---
