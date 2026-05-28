@@ -11,12 +11,12 @@ les **concentrations en nitrates**.
 
 ## Fonctionnalités principales
 
-- 📥 **Import** des données qualité eau, occupation du sol, MNT et
+-  **Import** des données qualité eau, occupation du sol, MNT et
   bassins versants
-- 🌍 **Calcul** des variables environnementales spatiales
-- 🤖 **Modélisation** par Random Forest pour prédire les nitrates
-- 🗺️ **Cartographie** des zones vulnérables à la pollution
-- 📋 **Recommandations** automatiques de gestion durable
+-  **Calcul** des variables environnementales spatiales
+-  **Modélisation** par Random Forest pour prédire les nitrates
+-  **Cartographie** des zones vulnérables à la pollution
+-  **Recommandations** automatiques de gestion durable
 
 ------------------------------------------------------------------------
 
