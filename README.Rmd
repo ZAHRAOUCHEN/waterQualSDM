@@ -83,6 +83,7 @@ cartes <- plot_water_quality_map(nitrates_map, vuln_map, watershed)
 print(cartes$carte_nitrates)
 print(cartes$carte_vulnerabilite)
 print(cartes$carte_bassins)
+
 ## Exemples de résultats
 
 ### Carte des concentrations en nitrates
@@ -100,7 +101,7 @@ print(cartes$carte_bassins)
 ### Évaluation du modèle — Observed vs Predicted
 
 ![Observed vs Predicted](https://raw.githubusercontent.com/ZAHRAOUCHEN/waterQualSDM/master/man/figures/obs_vs_pred.png)
-```
+
 
 ---
 
