@@ -101,7 +101,11 @@ print(cartes$carte_nitrates)
 print(cartes$carte_vulnerabilite)
 print(cartes$carte_bassins)
 ```
-
+> ⚠️ **Note sur les données simulées** : Les données d'exemple sont générées 
+> aléatoirement pour démontrer le pipeline. Les métriques du modèle (R², RMSE) 
+> ne sont donc pas représentatives de vraies données terrain. Avec de vraies 
+> mesures de nitrates et des rasters réels, le modèle produira des résultats 
+> significatifs et interprétables.
 
 ## Exemples de résultats
 
