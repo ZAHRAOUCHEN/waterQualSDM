@@ -15,7 +15,11 @@ les **concentrations en nitrates**.
   bassins versants
 -  **Calcul** des variables environnementales spatiales
 -  **Modélisation** par Random Forest pour prédire les nitrates
+<<<<<<< HEAD
 - ️ **Cartographie** des zones vulnérables à la pollution
+=======
+-  **Cartographie** des zones vulnérables à la pollution
+>>>>>>> 6fa0a538840cd988f1b14934ba17cae73ceede41
 -  **Recommandations** automatiques de gestion durable
 
 ------------------------------------------------------------------------
