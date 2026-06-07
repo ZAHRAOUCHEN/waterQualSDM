@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Introduction à waterQualSDM</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction à waterQualSDM</h1>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p><code>waterQualSDM</code> est un package R pour analyser et modéliser
+la qualité du sol dans les bassins versants agricoles au Maroc. Il
+permet de :</p>
+<ul>
+<li>Importer et nettoyer les données environnementales réelles</li>
+<li>Calculer des variables environnementales spatiales</li>
+<li>Prédire le <strong>Soil Organic Carbon (SOC)</strong> avec Random
+Forest</li>
+<li>Cartographier les zones vulnérables</li>
+<li>Générer des recommandations de gestion durable</li>
+</ul>
+<div id="données-utilisées" class="section level3">
+<h3>Données utilisées</h3>
+<ul>
+<li><strong>Variable cible</strong> : Soil Organic Carbon (SOC) depuis
+SoilGrids (0-5cm, g/kg)</li>
+<li><strong>Occupation du sol</strong> : ESA World Cover</li>
+<li><strong>Topographie</strong> : SRTM 30s (altitude et pente)</li>
+<li><strong>Précipitations</strong> : WorldClim 2.5min</li>
+<li><strong>Zone d’étude</strong> : Maroc incluant le Sahara Occidental
+(source : GADM)</li>
+</ul>
+<hr />
+</div>
+</div>
+<div id="étape-1-chargement-des-données" class="section level2">
+<h2>Étape 1 — Chargement des données</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># Charger les données d&#39;exemple incluses dans le package</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a><span class="fu">data</span>(water_quality)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a><span class="fu">data</span>(watershed_sf)</span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Nombre de stations :&quot;</span>, <span class="fu">nrow</span>(water_quality), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a><span class="co">#&gt; Nombre de stations : 200</span></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Nombre de bassins  :&quot;</span>, <span class="fu">nrow</span>(watershed_sf), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a><span class="co">#&gt; Nombre de bassins  : 5</span></span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a><span class="fu">head</span>(water_quality)</span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co">#&gt;   station_id longitude latitude       date  soc landuse      slope altitude precipitation</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a><span class="co">#&gt; 1     MAR001 -6.245833 34.52917 2020-10-24 39.8       1  0.0659880       11        553.76</span></span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a><span class="co">#&gt; 2     MAR002 -1.862500 34.72917 2020-01-17 19.4       1  0.3837251      499        332.20</span></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co">#&gt; 3     MAR003 -6.604167 30.69583 2021-04-26 12.0       4  8.4781332     1673        182.60</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a><span class="co">#&gt; 4     MAR004 -2.545833 33.87083 2021-06-15  9.9       4  0.4698335     1135        319.60</span></span>
+<span id="cb1-15"><a href="#cb1-15" tabindex="-1"></a><span class="co">#&gt; 5     MAR005 -5.212500 32.74583 2023-12-27 17.7       1  2.6968837     1651        311.88</span></span>
+<span id="cb1-16"><a href="#cb1-16" tabindex="-1"></a><span class="co">#&gt; 6     MAR006 -5.029167 32.14583 2020-03-16 32.0       4 12.0602722     2462        247.20</span></span></code></pre></div>
+<hr />
+</div>
+<div id="étape-2-import-des-données-spatiales" class="section level2">
+<h2>Étape 2 — Import des données spatiales</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Importer les données qualité du sol</span></span>
+<span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a>file_wq <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;water_quality.csv&quot;</span>, </span>
+<span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a>                        <span class="at">package =</span> <span class="st">&quot;waterQualSDM&quot;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" tabindex="-1"></a>wq_data <span class="ot">&lt;-</span> <span class="fu">import_water_quality_data</span>(file_wq)</span>
+<span id="cb2-5"><a href="#cb2-5" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" tabindex="-1"></a><span class="co"># Importer les bassins versants</span></span>
+<span id="cb2-7"><a href="#cb2-7" tabindex="-1"></a>file_ws <span class="ot">&lt;-</span> <span class="fu">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;watersheds.geojson&quot;</span>, </span>
+<span id="cb2-8"><a href="#cb2-8" tabindex="-1"></a>                        <span class="at">package =</span> <span class="st">&quot;waterQualSDM&quot;</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" tabindex="-1"></a>watershed <span class="ot">&lt;-</span> <span class="fu">import_watershed</span>(file_ws)</span>
+<span id="cb2-10"><a href="#cb2-10" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Stations importées :&quot;</span>, <span class="fu">nrow</span>(wq_data<span class="sc">$</span>dataframe), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb2-12"><a href="#cb2-12" tabindex="-1"></a><span class="co">#&gt; Stations importées : 200</span></span>
+<span id="cb2-13"><a href="#cb2-13" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Bassins versants   :&quot;</span>, <span class="fu">nrow</span>(watershed), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb2-14"><a href="#cb2-14" tabindex="-1"></a><span class="co">#&gt; Bassins versants   : 16</span></span></code></pre></div>
+<hr />
+</div>
+<div id="étape-3-prétraitement-des-données" class="section level2">
+<h2>Étape 3 — Prétraitement des données</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="co"># Préparer les features pour la modélisation</span></span>
+<span id="cb3-2"><a href="#cb3-2" tabindex="-1"></a>features_spatial <span class="ot">&lt;-</span> water_quality[, <span class="fu">c</span>(<span class="st">&quot;soc&quot;</span>, <span class="st">&quot;landuse&quot;</span>, <span class="st">&quot;slope&quot;</span>, </span>
+<span id="cb3-3"><a href="#cb3-3" tabindex="-1"></a>                                       <span class="st">&quot;altitude&quot;</span>, <span class="st">&quot;precipitation&quot;</span>)]</span>
+<span id="cb3-4"><a href="#cb3-4" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" tabindex="-1"></a>data_prep <span class="ot">&lt;-</span> <span class="fu">preprocess_data</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" tabindex="-1"></a>  <span class="at">df        =</span> features_spatial,</span>
+<span id="cb3-7"><a href="#cb3-7" tabindex="-1"></a>  <span class="at">target    =</span> <span class="st">&quot;soc&quot;</span>,</span>
+<span id="cb3-8"><a href="#cb3-8" tabindex="-1"></a>  <span class="at">test_size =</span> <span class="fl">0.2</span>,</span>
+<span id="cb3-9"><a href="#cb3-9" tabindex="-1"></a>  <span class="at">normalize =</span> <span class="cn">TRUE</span></span>
+<span id="cb3-10"><a href="#cb3-10" tabindex="-1"></a>)</span>
+<span id="cb3-11"><a href="#cb3-11" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Taille train :&quot;</span>, <span class="fu">nrow</span>(data_prep<span class="sc">$</span>train), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" tabindex="-1"></a><span class="co">#&gt; Taille train : 160</span></span>
+<span id="cb3-14"><a href="#cb3-14" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Taille test  :&quot;</span>, <span class="fu">nrow</span>(data_prep<span class="sc">$</span>test),  <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" tabindex="-1"></a><span class="co">#&gt; Taille test  : 40</span></span>
+<span id="cb3-16"><a href="#cb3-16" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">&quot;Variables    :&quot;</span>, <span class="fu">paste</span>(data_prep<span class="sc">$</span>feature_names, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>), <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)</span>
+<span id="cb3-17"><a href="#cb3-17" tabindex="-1"></a><span class="co">#&gt; Variables    : landuse, slope, altitude, precipitation</span></span></code></pre></div>
+<hr />
+</div>
+<div id="étape-4-modélisation-random-forest" class="section level2">
+<h2>Étape 4 — Modélisation Random Forest</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a>model_result <span class="ot">&lt;-</span> <span class="fu">train_rf_model</span>(</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a>  <span class="at">data_prep =</span> data_prep,</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a>  <span class="at">target    =</span> <span class="st">&quot;soc&quot;</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a>  <span class="at">ntrees    =</span> <span class="dv">500</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a>  <span class="at">tune      =</span> <span class="cn">TRUE</span></span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a>)</span></code></pre></div>
+<div id="importance-des-variables" class="section level3">
+<h3>Importance des variables</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(model_result<span class="sc">$</span>importance, </span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>             <span class="at">caption =</span> <span class="st">&quot;Importance des variables explicatives&quot;</span>)</span></code></pre></div>
+<table>
+<caption>Importance des variables explicatives</caption>
+<thead>
+<tr class="header">
+<th align="left"></th>
+<th align="left">variable</th>
+<th align="right">importance</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">precipitation</td>
+<td align="left">precipitation</td>
+<td align="right">13827.476</td>
+</tr>
+<tr class="even">
+<td align="left">slope</td>
+<td align="left">slope</td>
+<td align="right">5278.829</td>
+</tr>
+<tr class="odd">
+<td align="left">altitude</td>
+<td align="left">altitude</td>
+<td align="right">3525.631</td>
+</tr>
+<tr class="even">
+<td align="left">landuse</td>
+<td align="left">landuse</td>
+<td align="right">1333.320</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+</div>
+<div id="étape-5-évaluation-du-modèle" class="section level2">
+<h2>Étape 5 — Évaluation du modèle</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a>eval_result <span class="ot">&lt;-</span> <span class="fu">evaluate_model</span>(model_result, data_prep, <span class="at">target =</span> <span class="st">&quot;soc&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(eval_result<span class="sc">$</span>metrics, <span class="at">caption =</span> <span class="st">&quot;Métriques de performance&quot;</span>)</span></code></pre></div>
+<table>
+<caption>Métriques de performance</caption>
+<thead>
+<tr class="header">
+<th align="left">Métrique</th>
+<th align="right">Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">RMSE</td>
+<td align="right">5.6574</td>
+</tr>
+<tr class="even">
+<td align="left">MAE</td>
+<td align="right">3.5095</td>
+</tr>
+<tr class="odd">
+<td align="left">R²</td>
+<td align="right">0.8249</td>
+</tr>
+</tbody>
+</table>
+<div id="observed-vs-predicted" class="section level3">
+<h3>Observed vs Predicted</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a><span class="fu">print</span>(eval_result<span class="sc">$</span>plot_obs_pred)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="graphique-des-résidus" class="section level3">
+<h3>Graphique des résidus</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a><span class="fu">print</span>(eval_result<span class="sc">$</span>plot_residuals)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+</div>
+<div id="importance-des-variables-1" class="section level3">
+<h3>Importance des variables</h3>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a><span class="fu">print</span>(eval_result<span class="sc">$</span>plot_importance)</span></code></pre></div>
+<p><img role="img" src="data:image/png;base64,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" /><!-- --></p>
+<hr />
+</div>
+</div>
+<div id="étape-6-résumé-par-bassin-versant" class="section level2">
+<h2>Étape 6 — Résumé par bassin versant</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co"># Créer un résumé synthétique par bassin</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>summary_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>  <span class="at">basin_name        =</span> watershed<span class="sc">$</span>NAME_1,</span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  <span class="at">nitrates_mean_mgl =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="fu">nrow</span>(watershed), <span class="dv">10</span>, <span class="dv">50</span>), <span class="dv">2</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>  <span class="at">vulnerability_mean =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="fu">nrow</span>(watershed), <span class="fl">0.2</span>, <span class="fl">0.9</span>), <span class="dv">2</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" tabindex="-1"></a>  <span class="at">agriculture_pct   =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="fu">nrow</span>(watershed), <span class="dv">20</span>, <span class="dv">70</span>), <span class="dv">1</span>),</span>
+<span id="cb10-7"><a href="#cb10-7" tabindex="-1"></a>  <span class="at">risk_class        =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">&quot;Faible&quot;</span>, <span class="st">&quot;Moyen&quot;</span>, <span class="st">&quot;Élevé&quot;</span>), </span>
+<span id="cb10-8"><a href="#cb10-8" tabindex="-1"></a>                             <span class="fu">nrow</span>(watershed), <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" tabindex="-1"></a>)</span>
+<span id="cb10-10"><a href="#cb10-10" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(summary_df, <span class="at">caption =</span> <span class="st">&quot;Résumé par bassin versant&quot;</span>)</span></code></pre></div>
+<table>
+<caption>Résumé par bassin versant</caption>
+<colgroup>
+<col width="34%" />
+<col width="18%" />
+<col width="19%" />
+<col width="16%" />
+<col width="11%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">basin_name</th>
+<th align="right">nitrates_mean_mgl</th>
+<th align="right">vulnerability_mean</th>
+<th align="right">agriculture_pct</th>
+<th align="left">risk_class</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Chaouia - Ouardigha</td>
+<td align="right">23.87</td>
+<td align="right">0.78</td>
+<td align="right">52.3</td>
+<td align="left">Moyen</td>
+</tr>
+<tr class="even">
+<td align="left">Doukkala - Abda</td>
+<td align="right">25.94</td>
+<td align="right">0.69</td>
+<td align="right">58.8</td>
+<td align="left">Moyen</td>
+</tr>
+<tr class="odd">
+<td align="left">Fès - Boulemane</td>
+<td align="right">41.39</td>
+<td align="right">0.37</td>
+<td align="right">48.2</td>
+<td align="left">Faible</td>
+</tr>
+<tr class="even">
+<td align="left">Gharb - Chrarda - Béni Hssen</td>
+<td align="right">11.56</td>
+<td align="right">0.23</td>
+<td align="right">31.7</td>
+<td align="left">Moyen</td>
+</tr>
+<tr class="odd">
+<td align="left">Grand Casablanca</td>
+<td align="right">39.95</td>
+<td align="right">0.30</td>
+<td align="right">24.5</td>
+<td align="left">Faible</td>
+</tr>
+<tr class="even">
+<td align="left">Guelmim - Es-Semara</td>
+<td align="right">37.09</td>
+<td align="right">0.35</td>
+<td align="right">24.3</td>
+<td align="left">Moyen</td>
+</tr>
+<tr class="odd">
+<td align="left">Laâyoune - Boujdour - Sakia El H</td>
+<td align="right">16.85</td>
+<td align="right">0.54</td>
+<td align="right">35.3</td>
+<td align="left">Élevé</td>
+</tr>
+<tr class="even">
+<td align="left">Marrakech - Tensift - Al Haouz</td>
+<td align="right">20.44</td>
+<td align="right">0.34</td>
+<td align="right">53.4</td>
+<td align="left">Faible</td>
+</tr>
+<tr class="odd">
+<td align="left">Meknès - Tafilalet</td>
+<td align="right">30.58</td>
+<td align="right">0.70</td>
+<td align="right">20.0</td>
+<td align="left">Faible</td>
+</tr>
+<tr class="even">
+<td align="left">Oriental</td>
+<td align="right">37.02</td>
+<td align="right">0.21</td>
+<td align="right">30.4</td>
+<td align="left">Élevé</td>
+</tr>
+<tr class="odd">
+<td align="left">Rabat - Salé - Zemmour - Zaer</td>
+<td align="right">49.31</td>
+<td align="right">0.46</td>
+<td align="right">66.7</td>
+<td align="left">Moyen</td>
+</tr>
+<tr class="even">
+<td align="left">Souss - Massa - Draâ</td>
+<td align="right">40.38</td>
+<td align="right">0.56</td>
+<td align="right">66.3</td>
+<td align="left">Moyen</td>
+</tr>
+<tr class="odd">
+<td align="left">Tadla - Azilal</td>
+<td align="right">32.66</td>
+<td align="right">0.20</td>
+<td align="right">56.7</td>
+<td align="left">Élevé</td>
+</tr>
+<tr class="even">
+<td align="left">Tanger - Tétouan</td>
+<td align="right">43.99</td>
+<td align="right">0.61</td>
+<td align="right">36.7</td>
+<td align="left">Faible</td>
+</tr>
+<tr class="odd">
+<td align="left">Taza - Al Hoceima - Taounate</td>
+<td align="right">17.58</td>
+<td align="right">0.31</td>
+<td align="right">45.8</td>
+<td align="left">Faible</td>
+</tr>
+<tr class="even">
+<td align="left">Sahara Occidental</td>
+<td align="right">20.85</td>
+<td align="right">0.45</td>
+<td align="right">57.2</td>
+<td align="left">Moyen</td>
+</tr>
+</tbody>
+</table>
+<hr />
+</div>
+<div id="étape-7-recommandations-de-gestion" class="section level2">
+<h2>Étape 7 — Recommandations de gestion</h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a>recommendations <span class="ot">&lt;-</span> <span class="fu">generate_recommendations</span>(summary_df)</span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a>knitr<span class="sc">::</span><span class="fu">kable</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>  recommendations[, <span class="fu">c</span>(<span class="st">&quot;basin_name&quot;</span>, <span class="st">&quot;risk_class&quot;</span>, <span class="st">&quot;recommandations&quot;</span>)],</span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>  <span class="at">caption =</span> <span class="st">&quot;Recommandations par bassin versant&quot;</span></span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>)</span></code></pre></div>
+<table>
+<caption>Recommandations par bassin versant</caption>
+<colgroup>
+<col width="12%" />
+<col width="4%" />
+<col width="82%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">basin_name</th>
+<th align="left">risk_class</th>
+<th align="left">recommandations</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">Chaouia - Ouardigha</td>
+<td align="left">Moyen</td>
+<td align="left">PRIORITÉ MOYENNE :</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li>Optimiser les doses de fertilisation (agriculture de
+précision).</li>
+<li>Favoriser les prairies en bordure de cours d’eau.</li>
+<li>Surveiller régulièrement la qualité de l’eau. | |Doukkala - Abda
+|Moyen |PRIORITÉ MOYENNE :</li>
+<li>Optimiser les doses de fertilisation (agriculture de
+précision).</li>
+<li>Favoriser les prairies en bordure de cours d’eau.</li>
+<li>Surveiller régulièrement la qualité de l’eau. | |Fès - Boulemane
+|Faible |PRIORITÉ FAIBLE :</li>
+<li>Maintenir les bonnes pratiques agricoles actuelles.</li>
+<li>Continuer le suivi de la qualité de l’eau. | |Gharb - Chrarda - Béni
+Hssen |Moyen |PRIORITÉ MOYENNE :</li>
+<li>Optimiser les doses de fertilisation (agriculture de
+précision).</li>
+<li>Favoriser les prairies en bordure de cours d’eau.</li>
+<li>Surveiller régulièrement la qualité de l’eau. | |Grand Casablanca
+|Faible |PRIORITÉ FAIBLE :</li>
+<li>Maintenir les bonnes pratiques agricoles actuelles.</li>
+<li>Continuer le suivi de la qualité de l’eau. | |Guelmim - Es-Semara
+|Moyen |PRIORITÉ MOYENNE :</li>
+<li>Optimiser les doses de fertilisation (agriculture de
+précision).</li>
+<li>Favoriser les prairies en bordure de cours d’eau.</li>
+<li>Surveiller régulièrement la qualité de l’eau. | |Laâyoune - Boujdour
+- Sakia El H |Élevé |PRIORITÉ HAUTE :</li>
+<li>Réduire immédiatement les apports en fertilisants azotés.</li>
+<li>Mettre en place des bandes tampons riveraines (5-10m).</li>
+<li>Installer une couverture végétale hivernale.</li>
+<li>Contrôler les périodes d’épandage. | |Marrakech - Tensift - Al Haouz
+|Faible |PRIORITÉ FAIBLE :</li>
+<li>Maintenir les bonnes pratiques agricoles actuelles.</li>
+<li>Continuer le suivi de la qualité de l’eau. | |Meknès - Tafilalet
+|Faible |PRIORITÉ FAIBLE :</li>
+<li>Maintenir les bonnes pratiques agricoles actuelles.</li>
+<li>Continuer le suivi de la qualité de l’eau. | |Oriental |Élevé
+|PRIORITÉ HAUTE :</li>
+<li>Réduire immédiatement les apports en fertilisants azotés.</li>
+<li>Mettre en place des bandes tampons riveraines (5-10m).</li>
+<li>Installer une couverture végétale hivernale.</li>
+<li>Contrôler les périodes d’épandage. | |Rabat - Salé - Zemmour - Zaer
+|Moyen |PRIORITÉ MOYENNE :</li>
+<li>Optimiser les doses de fertilisation (agriculture de
+précision).</li>
+<li>Favoriser les prairies en bordure de cours d’eau.</li>
+<li>Surveiller régulièrement la qualité de l’eau. | |Souss - Massa -
+Draâ |Moyen |PRIORITÉ MOYENNE :</li>
+<li>Optimiser les doses de fertilisation (agriculture de
+précision).</li>
+<li>Favoriser les prairies en bordure de cours d’eau.</li>
+<li>Surveiller régulièrement la qualité de l’eau. | |Tadla - Azilal
+|Élevé |PRIORITÉ HAUTE :</li>
+<li>Réduire immédiatement les apports en fertilisants azotés.</li>
+<li>Mettre en place des bandes tampons riveraines (5-10m).</li>
+<li>Installer une couverture végétale hivernale.</li>
+<li>Contrôler les périodes d’épandage. | |Tanger - Tétouan |Faible
+|PRIORITÉ FAIBLE :</li>
+<li>Maintenir les bonnes pratiques agricoles actuelles.</li>
+<li>Continuer le suivi de la qualité de l’eau. | |Taza - Al Hoceima -
+Taounate |Faible |PRIORITÉ FAIBLE :</li>
+<li>Maintenir les bonnes pratiques agricoles actuelles.</li>
+<li>Continuer le suivi de la qualité de l’eau. | |Sahara Occidental
+|Moyen |PRIORITÉ MOYENNE :</li>
+<li>Optimiser les doses de fertilisation (agriculture de
+précision).</li>
+<li>Favoriser les prairies en bordure de cours d’eau.</li>
+<li>Surveiller régulièrement la qualité de l’eau. |</li>
+</ul>
+<hr />
+</div>
+<div id="conclusion" class="section level2">
+<h2>Conclusion</h2>
+<p>Ce pipeline complet permet de :</p>
+<ol style="list-style-type: decimal">
+<li><strong>Importer</strong> des données environnementales réelles</li>
+<li><strong>Prétraiter</strong> les données pour la modélisation</li>
+<li><strong>Modéliser</strong> le Soil Organic Carbon avec Random Forest
+(R² = 0.82)</li>
+<li><strong>Évaluer</strong> les performances du modèle</li>
+<li><strong>Générer</strong> des recommandations de gestion durable</li>
+</ol>
+<p>Pour la prédiction spatiale complète sur rasters, voir les fonctions
+<code>predict_water_quality()</code> et
+<code>calculate_vulnerability_index()</code>.</p>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
