@@ -91,7 +91,7 @@ print(cartes$carte_vulnerabilite)
 print(cartes$carte_bassins)
 ```
 
-> > 📊\> 📊 **Données utilisées** : Le package utilise de vraies données
+> > **Données utilisées** : Le package utilise de vraies données
 > > environnementales du Maroc téléchargées depuis des sources
 > > officielles : - **Variable cible** : Soil Organic Carbon (SOC)
 > > depuis SoilGrids (0-5cm, g/kg) - **Occupation du sol** : ESA World
