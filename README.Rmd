@@ -74,7 +74,7 @@ features_spatial <- features[, !names(features) %in%
                                c("phosphates", "station_id", "date")]
 
 # 3. Prétraitement
-data_prep <- preprocess_data(features_spatial, target = "nitrates")
+data_prep <- preprocess_data(features_spatial, target = "soc")
 
 # 4. Modélisation Random Forest
 model_result <- train_rf_model(data_prep, ntrees = 500, tune = TRUE)
@@ -145,7 +145,7 @@ print(cartes$carte_bassins)
 | `preprocess_data()` | Prétraitement et split train/test |
 | `train_rf_model()` | Entraînement du Random Forest |
 | `evaluate_model()` | Évaluation RMSE, MAE, R² |
-| `predict_water_quality()` | Prédiction spatiale des nitrates |
+| `predict_water_quality()` | Prédiction spatiale de la qualité du sol (SOC) |
 | `calculate_vulnerability_index()` | Calcul de l'indice de vulnérabilité |
 | `summarize_watersheds()` | Résumé statistique par bassin |
 | `generate_recommendations()` | Recommandations de gestion |
