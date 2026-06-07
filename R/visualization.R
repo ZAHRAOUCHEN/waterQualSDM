@@ -65,7 +65,7 @@ plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, outp
       linewidth = 0.8
     ) +
     ggplot2::labs(
-      title = "Indice de vulnérabilité aux nitrates",
+      title = "Indice de vulnérabilité au Soil Organic Carbon",
       x     = "Longitude",
       y     = "Latitude"
     ) +
