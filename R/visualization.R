@@ -24,7 +24,7 @@ plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, outp
     ) +
     ggplot2::scale_fill_gradientn(
       colors = c("darkgreen", "yellow", "orange", "red"),
-      name   = "Nitrates\n(mg/L)"
+      name = "SOC\n(g/kg)"
     ) +
     ggplot2::geom_sf(
       data = watershed,
@@ -33,7 +33,7 @@ plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, outp
       linewidth = 0.8
     ) +
     ggplot2::labs(
-      title = "Concentration en nitrates prédite",
+      title = "Soil Organic Carbon prédit (g/kg)",,
       x     = "Longitude",
       y     = "Latitude"
     ) +
