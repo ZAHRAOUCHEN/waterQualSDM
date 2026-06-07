@@ -196,11 +196,19 @@ preprocess_data <- function(df, target = "nitrates", test_size = 0.2,
   test_idx  <- sample(1:n, size = floor(test_size * n))
   train_idx <- setdiff(1:n, test_idx)
 
+  train_df <- cbind(X[train_idx, ], y[train_idx])
+  test_df  <- cbind(X[test_idx, ],  y[test_idx])
+  clean_df <- cbind(X, y)
+
+  names(train_df)[ncol(train_df)] <- target
+  names(test_df)[ncol(test_df)]   <- target
+  names(clean_df)[ncol(clean_df)] <- target
+
   result <- list(
-    train         = cbind(X[train_idx, ], nitrates = y[train_idx]),
-    test          = cbind(X[test_idx, ],  nitrates = y[test_idx]),
+    train         = train_df,
+    test          = test_df,
     feature_names = names(X),
-    clean_data    = cbind(X, nitrates = y)
+    clean_data    = clean_df
   )
 
   message("Split train/test : ", length(train_idx), " train / ",

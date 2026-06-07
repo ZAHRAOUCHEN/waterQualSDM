@@ -66,8 +66,19 @@ calculate_vulnerability_index <- function(nitrates_raster, landuse, hydro, outpu
   }
 
   nitrates_norm  <- normalize(nitrates_raster)
-  slope_norm     <- normalize(hydro[["slope"]])
-  dist_river_inv <- normalize(1 / (hydro[["dist_river"]] + 1))
+  # Utiliser slope si disponible, sinon première couche
+  if ("slope" %in% names(hydro)) {
+    slope_norm <- normalize(hydro[["slope"]])
+  } else {
+    slope_norm <- normalize(hydro[[1]])
+  }
+
+  # Utiliser dist_river si disponible, sinon mettre à 0
+  if ("dist_river" %in% names(hydro)) {
+    dist_river_inv <- normalize(1 / (hydro[["dist_river"]] + 1))
+  } else {
+    dist_river_inv <- slope_norm * 0
+  }
 
   # Agriculture = 1 dans notre classification
   agriculture <- landuse == 1
