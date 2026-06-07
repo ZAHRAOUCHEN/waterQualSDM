@@ -72,21 +72,21 @@ model_result <- train_rf_model(data_prep, ntrees = 500, tune = TRUE)
 eval_result <- evaluate_model(model_result, data_prep)
 print(eval_result$metrics)
 
-# 6. Prédiction spatiale
-nitrates_map <- predict_water_quality(model_result, landuse, hydro$raster)
+# 6. Prédiction spatiale du SOC
+soc_map <- predict_water_quality(model_result, landuse, hydro$raster)
 
 # 7. Indice de vulnérabilité
-vuln_map <- calculate_vulnerability_index(nitrates_map, landuse, hydro$raster)
+vuln_map <- calculate_vulnerability_index(soc_map, landuse, hydro$raster)
 
 # 8. Résumé par bassin
-summary_df <- summarize_watersheds(watershed, nitrates_map, vuln_map, landuse)
+summary_df <- summarize_watersheds(watershed, soc_map, vuln_map, landuse)
 
 # 9. Recommandations
 recommendations <- generate_recommendations(summary_df)
 
 # 10. Cartographie
-cartes <- plot_water_quality_map(nitrates_map, vuln_map, watershed)
-print(cartes$carte_nitrates)
+cartes <- plot_water_quality_map(soc_map, vuln_map, watershed)
+print(cartes$carte_soc)
 print(cartes$carte_vulnerabilite)
 print(cartes$carte_bassins)
 ```
@@ -104,13 +104,13 @@ print(cartes$carte_bassins)
 
 ## Exemples de résultats
 
-### Carte des concentrations en nitrates
+### Carte du Soil Organic Carbon prédit (g/kg)
 
 <figure>
 <img
-src="https://raw.githubusercontent.com/ZAHRAOUCHEN/waterQualSDM/master/man/figures/carte_nitrates.png"
-alt="Carte des nitrates" />
-<figcaption aria-hidden="true">Carte des nitrates</figcaption>
+src="https://raw.githubusercontent.com/ZAHRAOUCHEN/waterQualSDM/master/man/figures/carte_soc.png"
+alt="Carte SOC" />
+<figcaption aria-hidden="true">Carte SOC</figcaption>
 </figure>
 
 ### Carte de vulnérabilité
