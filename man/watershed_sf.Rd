@@ -3,22 +3,22 @@
 \docType{data}
 \name{watershed_sf}
 \alias{watershed_sf}
-\title{Bassins versants simulés}
+\title{Régions administratives du Maroc}
 \format{
-Un objet sf avec 5 lignes et 3 variables :
+Un objet sf avec 16 lignes et 2 variables :
 \describe{
-  \item{basin_id}{Identifiant du bassin}
-  \item{basin_name}{Nom du bassin}
+  \item{NAME_1}{Nom de la région}
   \item{geometry}{Géométrie du polygone}
 }
 }
 \source{
-Données simulées
+GADM 4.1 (https://gadm.org)
 }
 \usage{
 watershed_sf
 }
 \description{
-Un objet sf contenant 5 bassins versants fictifs.
+Un objet sf contenant les régions administratives du Maroc
+et le Sahara Occidental (source: GADM 4.1).
 }
 \keyword{datasets}

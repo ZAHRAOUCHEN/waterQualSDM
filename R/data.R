@@ -1,38 +1,42 @@
-#' Données de qualité de l'eau simulées
+#' Données de qualité du sol simulées pour le Maroc
 #'
-#' Un jeu de données simulé contenant les mesures de qualité
-#' de l'eau pour 50 stations de mesure fictives.
+#' Un jeu de données contenant les mesures de Soil Organic Carbon (SOC)
+#' pour 200 stations d'échantillonnage au Maroc, extraites depuis
+#' SoilGrids et des données environnementales réelles.
 #'
-#' @format Un data frame avec 50 lignes et 6 variables :
+#' @format Un data frame avec 200 lignes et 9 variables :
 #' \describe{
-#'   \item{station_id}{Identifiant de la station}
-#'   \item{longitude}{Longitude de la station}
-#'   \item{latitude}{Latitude de la station}
+#'   \item{station_id}{Identifiant de la station (MAR001, MAR002, ...)}
+#'   \item{longitude}{Longitude de la station (degrés décimaux)}
+#'   \item{latitude}{Latitude de la station (degrés décimaux)}
 #'   \item{date}{Date de prélèvement}
-#'   \item{nitrates}{Concentration en nitrates (mg/L)}
-#'   \item{phosphates}{Concentration en phosphates (mg/L)}
+#'   \item{soc}{Soil Organic Carbon en g/kg (source: SoilGrids 0-5cm)}
+#'   \item{landuse}{Classe d'occupation du sol (1=Agriculture, 2=Forêt, 3=Urbain, 4=Autre)}
+#'   \item{slope}{Pente en degrés (source: SRTM)}
+#'   \item{altitude}{Altitude en mètres (source: SRTM)}
+#'   \item{precipitation}{Précipitations annuelles en mm (source: WorldClim)}
 #' }
-#' @source Données simulées
+#' @source SoilGrids, ESA World Cover, SRTM, WorldClim
 "water_quality"
 
 
-#' Bassins versants simulés
+#' Régions administratives du Maroc
 #'
-#' Un objet sf contenant 5 bassins versants fictifs.
+#' Un objet sf contenant les régions administratives du Maroc
+#' et le Sahara Occidental (source: GADM 4.1).
 #'
-#' @format Un objet sf avec 5 lignes et 3 variables :
+#' @format Un objet sf avec 16 lignes et 2 variables :
 #' \describe{
-#'   \item{basin_id}{Identifiant du bassin}
-#'   \item{basin_name}{Nom du bassin}
+#'   \item{NAME_1}{Nom de la région}
 #'   \item{geometry}{Géométrie du polygone}
 #' }
-#' @source Données simulées
+#' @source GADM 4.1 (https://gadm.org)
 "watershed_sf"
 
 
 #' Cours d'eau simulés
 #'
-#' Un objet sf contenant 2 cours d'eau fictifs.
+#' Un objet sf contenant 2 cours d'eau fictifs pour démonstration.
 #'
 #' @format Un objet sf avec 2 lignes et 3 variables :
 #' \describe{

@@ -3,26 +3,30 @@
 \docType{data}
 \name{water_quality}
 \alias{water_quality}
-\title{Données de qualité de l'eau simulées}
+\title{Données de qualité du sol simulées pour le Maroc}
 \format{
-Un data frame avec 50 lignes et 6 variables :
+Un data frame avec 200 lignes et 9 variables :
 \describe{
-  \item{station_id}{Identifiant de la station}
-  \item{longitude}{Longitude de la station}
-  \item{latitude}{Latitude de la station}
+  \item{station_id}{Identifiant de la station (MAR001, MAR002, ...)}
+  \item{longitude}{Longitude de la station (degrés décimaux)}
+  \item{latitude}{Latitude de la station (degrés décimaux)}
   \item{date}{Date de prélèvement}
-  \item{nitrates}{Concentration en nitrates (mg/L)}
-  \item{phosphates}{Concentration en phosphates (mg/L)}
+  \item{soc}{Soil Organic Carbon en g/kg (source: SoilGrids 0-5cm)}
+  \item{landuse}{Classe d'occupation du sol (1=Agriculture, 2=Forêt, 3=Urbain, 4=Autre)}
+  \item{slope}{Pente en degrés (source: SRTM)}
+  \item{altitude}{Altitude en mètres (source: SRTM)}
+  \item{precipitation}{Précipitations annuelles en mm (source: WorldClim)}
 }
 }
 \source{
-Données simulées
+SoilGrids, ESA World Cover, SRTM, WorldClim
 }
 \usage{
 water_quality
 }
 \description{
-Un jeu de données simulé contenant les mesures de qualité
-de l'eau pour 50 stations de mesure fictives.
+Un jeu de données contenant les mesures de Soil Organic Carbon (SOC)
+pour 200 stations d'échantillonnage au Maroc, extraites depuis
+SoilGrids et des données environnementales réelles.
 }
 \keyword{datasets}
