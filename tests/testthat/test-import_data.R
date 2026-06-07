@@ -26,10 +26,10 @@ test_that("import_water_quality_data retourne un dataframe", {
   expect_s3_class(result$dataframe, "data.frame")
 })
 
-test_that("import_water_quality_data contient colonne nitrates", {
+test_that("import_water_quality_data contient colonne soc", {
   file <- system.file("extdata", "water_quality.csv", package = "waterQualSDM")
   result <- import_water_quality_data(file)
-  expect_true("nitrates" %in% names(result$dataframe))
+  expect_true("soc" %in% names(result$dataframe))
 })
 
 test_that("import_water_quality_data erreur si format inconnu", {

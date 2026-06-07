@@ -46,8 +46,8 @@ import_water_quality_data <- function(file, lat = "latitude", lon = "longitude",
   df <- df[complete.cases(df[, c(lat, lon)]), ]
 
   # Vérification colonne nitrates
-  if (!"nitrates" %in% names(df)) {
-    warning("Colonne 'nitrates' non trouvée dans les données.")
+  if (!"nitrates" %in% names(df) & !"soc" %in% names(df)) {
+    warning("Aucune colonne de qualité (nitrates ou soc) trouvée dans les données.")
   }
 
   # Conversion en objet spatial sf
