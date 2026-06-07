@@ -9,9 +9,10 @@ Authors@R: c(
       role = c("aut", "cre")
     )
   )
-Description: A package for analyzing and modeling water quality in agricultural 
-    watersheds, with a focus on nitrate concentration prediction using 
-    Random Forest and spatial vulnerability mapping.
+Description: A package for analyzing and modeling soil quality in agricultural 
+    watersheds in Morocco, with a focus on Soil Organic Carbon (SOC) prediction 
+    using Random Forest and spatial vulnerability mapping. Uses real environmental 
+    data from SoilGrids, ESA World Cover, SRTM and WorldClim.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
