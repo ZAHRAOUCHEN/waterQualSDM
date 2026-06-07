@@ -129,7 +129,7 @@ plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, outp
 
 
 
-#' Génération de recommandations de gestion
+#' Génération automatique de recommandations de gestion
 #'
 #' @param summary_df Dataframe issu de summarize_watersheds
 #' @return Un dataframe avec les recommandations par bassin
@@ -144,30 +144,33 @@ generate_recommendations <- function(summary_df) {
 
     risk  <- summary_df$risk_class[i]
     agri  <- summary_df$agriculture_pct[i]
-    nitro <- summary_df$nitrates_mean_mgl[i]
+    soc   <- summary_df$nitrates_mean_mgl[i]
 
     if (risk == "Élevé") {
       paste(
-        "PRIORITÉ HAUTE :",
-        "- Réduire immédiatement les apports en fertilisants azotés.",
-        "- Mettre en place des bandes tampons riveraines (5-10m).",
-        "- Installer une couverture végétale hivernale.",
-        "- Contrôler les périodes d'épandage.",
+        "PRIORITÉ HAUTE - Sol très appauvri en matière organique :",
+        "- Apporter du compost ou du fumier organique.",
+        "- Pratiquer l'agriculture de conservation (zéro labour).",
+        "- Planter des cultures de couverture hivernales.",
+        "- Éviter le brûlage des résidus de culture.",
+        "- Mettre en place des haies et bandes boisées.",
         sep = "\n"
       )
     } else if (risk == "Moyen") {
       paste(
-        "PRIORITÉ MOYENNE :",
-        "- Optimiser les doses de fertilisation (agriculture de précision).",
-        "- Favoriser les prairies en bordure de cours d'eau.",
-        "- Surveiller régulièrement la qualité de l'eau.",
+        "PRIORITÉ MOYENNE - Sol modérément appauvri :",
+        "- Maintenir les apports de matière organique.",
+        "- Pratiquer la rotation des cultures.",
+        "- Réduire le travail du sol au minimum.",
+        "- Favoriser les légumineuses pour enrichir le sol.",
         sep = "\n"
       )
     } else {
       paste(
-        "PRIORITÉ FAIBLE :",
+        "PRIORITÉ FAIBLE - Sol bien pourvu en matière organique :",
         "- Maintenir les bonnes pratiques agricoles actuelles.",
-        "- Continuer le suivi de la qualité de l'eau.",
+        "- Continuer le suivi régulier du SOC.",
+        "- Préserver la végétation naturelle existante.",
         sep = "\n"
       )
     }
