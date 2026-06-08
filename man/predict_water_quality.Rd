@@ -2,7 +2,7 @@
 % Please edit documentation in R/prediction.R
 \name{predict_water_quality}
 \alias{predict_water_quality}
-\title{Prédiction spatiale de la qualité de l'eau}
+\title{Prédiction spatiale de la qualité du sol}
 \usage{
 predict_water_quality(model_result, landuse, hydro, output_file = NULL)
 }
@@ -11,18 +11,18 @@ predict_water_quality(model_result, landuse, hydro, output_file = NULL)
 
 \item{landuse}{SpatRaster d'occupation du sol}
 
-\item{hydro}{SpatRaster des variables hydrologiques}
+\item{hydro}{SpatRaster des variables environnementales}
 
 \item{output_file}{Chemin pour exporter le GeoTIFF (optionnel)}
 }
 \value{
-Un SpatRaster des concentrations en nitrates prédites
+Un SpatRaster de la variable qualité prédite (SOC en g/kg)
 }
 \description{
-Prédiction spatiale de la qualité de l'eau
+Prédiction spatiale de la qualité du sol
 }
 \examples{
 \dontrun{
-nitrates_map <- predict_water_quality(model_result, landuse, hydro)
+soc_map <- predict_water_quality(model_result, landuse, hydro)
 }
 }

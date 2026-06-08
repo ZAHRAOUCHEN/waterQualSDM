@@ -9,7 +9,7 @@ summarize_watersheds(watershed, nitrates_raster, vuln_raster, landuse)
 \arguments{
 \item{watershed}{Objet sf des bassins versants}
 
-\item{nitrates_raster}{SpatRaster des nitrates prédits}
+\item{nitrates_raster}{SpatRaster de la variable qualité prédite (SOC ou nitrates)}
 
 \item{vuln_raster}{SpatRaster de vulnérabilité}
 
@@ -23,6 +23,6 @@ Résumé statistique par bassin versant
 }
 \examples{
 \dontrun{
-summary <- summarize_watersheds(watershed, nitrates_map, vuln)
+summary <- summarize_watersheds(watershed, soc_map, vuln)
 }
 }

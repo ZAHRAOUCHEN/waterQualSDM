@@ -1,14 +1,14 @@
-#' Prédiction spatiale de la qualité de l'eau
+#' Prédiction spatiale de la qualité du sol
 #'
 #' @param model_result Liste issue de train_rf_model
 #' @param landuse SpatRaster d'occupation du sol
-#' @param hydro SpatRaster des variables hydrologiques
+#' @param hydro SpatRaster des variables environnementales
 #' @param output_file Chemin pour exporter le GeoTIFF (optionnel)
-#' @return Un SpatRaster des concentrations en nitrates prédites
+#' @return Un SpatRaster de la variable qualité prédite (SOC en g/kg)
 #' @export
 #' @examples
 #' \dontrun{
-#' nitrates_map <- predict_water_quality(model_result, landuse, hydro)
+#' soc_map <- predict_water_quality(model_result, landuse, hydro)
 #' }
 predict_water_quality <- function(model_result, landuse, hydro, output_file = NULL) {
 
@@ -30,7 +30,7 @@ predict_water_quality <- function(model_result, landuse, hydro, output_file = NU
   # Remettre dans un raster
   result_raster        <- landuse[[1]]
   terra::values(result_raster) <- predictions
-  names(result_raster)  <- "nitrates_predicted"
+  names(result_raster)  <- "soc_predicted"
 
   # Export GeoTIFF si demandé
   if (!is.null(output_file)) {
@@ -44,15 +44,15 @@ predict_water_quality <- function(model_result, landuse, hydro, output_file = NU
 
 #' Calcul de l'indice de vulnérabilité
 #'
-#' @param nitrates_raster SpatRaster des nitrates prédits
+#' @param nitrates_raster SpatRaster de la variable qualité prédite (SOC ou nitrates)
 #' @param landuse SpatRaster d'occupation du sol
-#' @param hydro SpatRaster des variables hydrologiques
+#' @param hydro SpatRaster des variables environnementales
 #' @param output_file Chemin pour exporter le GeoTIFF (optionnel)
 #' @return Un SpatRaster de l'indice de vulnérabilité (1=faible, 2=moyen, 3=élevé)
 #' @export
 #' @examples
 #' \dontrun{
-#' vuln <- calculate_vulnerability_index(nitrates_map, landuse, hydro)
+#' vuln <- calculate_vulnerability_index(soc_map, landuse, hydro)
 #' }
 calculate_vulnerability_index <- function(nitrates_raster, landuse, hydro, output_file = NULL) {
 
@@ -66,6 +66,7 @@ calculate_vulnerability_index <- function(nitrates_raster, landuse, hydro, outpu
   }
 
   nitrates_norm  <- normalize(nitrates_raster)
+
   # Utiliser slope si disponible, sinon première couche
   if ("slope" %in% names(hydro)) {
     slope_norm <- normalize(hydro[["slope"]])
@@ -115,14 +116,14 @@ calculate_vulnerability_index <- function(nitrates_raster, landuse, hydro, outpu
 #' Résumé statistique par bassin versant
 #'
 #' @param watershed Objet sf des bassins versants
-#' @param nitrates_raster SpatRaster des nitrates prédits
+#' @param nitrates_raster SpatRaster de la variable qualité prédite (SOC ou nitrates)
 #' @param vuln_raster SpatRaster de vulnérabilité
 #' @param landuse SpatRaster d'occupation du sol
 #' @return Un dataframe avec les statistiques par bassin
 #' @export
 #' @examples
 #' \dontrun{
-#' summary <- summarize_watersheds(watershed, nitrates_map, vuln)
+#' summary <- summarize_watersheds(watershed, soc_map, vuln)
 #' }
 summarize_watersheds <- function(watershed, nitrates_raster, vuln_raster, landuse) {
 
@@ -130,7 +131,7 @@ summarize_watersheds <- function(watershed, nitrates_raster, vuln_raster, landus
 
   ws_vect <- terra::vect(watershed)
 
-  # Nitrates moyens par bassin
+  # SOC moyen par bassin
   nitrates_mean <- terra::extract(nitrates_raster, ws_vect, fun = mean, na.rm = TRUE)
 
   # Vulnérabilité moyenne par bassin
@@ -141,7 +142,7 @@ summarize_watersheds <- function(watershed, nitrates_raster, vuln_raster, landus
 
   # Assemblage
   result <- sf::st_drop_geometry(watershed)
-  result$nitrates_mean_mgl <- round(nitrates_mean[, 2], 2)
+  result$nitrates_mean_mgl  <- round(nitrates_mean[, 2], 2)
   result$vulnerability_mean <- round(vuln_mean[, 2], 2)
   result$agriculture_pct    <- round(agri_pct[, 2] * 100, 1)
   result$risk_class <- ifelse(
