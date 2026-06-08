@@ -105,14 +105,14 @@ train_rf_model <- function(data_prep, target = "soc", ntrees = 500, tune = TRUE)
 #'
 #' @param model_result Liste issue de train_rf_model
 #' @param data_prep Liste issue de preprocess_data
-#' @param target Nom de la colonne cible (défaut: "nitrates")
+#' @param target Nom de la colonne cible (défaut: "soc")
 #' @return Une liste avec métriques et graphiques
 #' @export
 #' @examples
 #' \dontrun{
 #' eval <- evaluate_model(model_result, data_prep)
 #' }
-evaluate_model <- function(model_result, data_prep, target = "nitrates") {
+evaluate_model <- function(model_result, data_prep, target = "soc") {
 
   test_data   <- data_prep$test
   model       <- model_result$model

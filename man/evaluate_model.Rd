@@ -4,14 +4,14 @@
 \alias{evaluate_model}
 \title{Évaluation des performances du modèle}
 \usage{
-evaluate_model(model_result, data_prep, target = "nitrates")
+evaluate_model(model_result, data_prep, target = "soc")
 }
 \arguments{
 \item{model_result}{Liste issue de train_rf_model}
 
 \item{data_prep}{Liste issue de preprocess_data}
 
-\item{target}{Nom de la colonne cible (défaut: "nitrates")}
+\item{target}{Nom de la colonne cible (défaut: "soc")}
 }
 \value{
 Une liste avec métriques et graphiques
