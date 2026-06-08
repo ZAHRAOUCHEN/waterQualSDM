@@ -2,7 +2,7 @@
 % Please edit documentation in R/visualization.R
 \name{generate_recommendations}
 \alias{generate_recommendations}
-\title{Génération de recommandations de gestion}
+\title{Génération automatique de recommandations de gestion du SOC}
 \usage{
 generate_recommendations(summary_df)
 }
@@ -13,7 +13,7 @@ generate_recommendations(summary_df)
 Un dataframe avec les recommandations par bassin
 }
 \description{
-Génération de recommandations de gestion
+Génération automatique de recommandations de gestion du SOC
 }
 \examples{
 \dontrun{

@@ -1,6 +1,6 @@
-#' Cartographie de la qualité de l'eau
+#' Cartographie de la qualité du sol et de la vulnérabilité
 #'
-#' @param nitrates_raster SpatRaster des nitrates prédits
+#' @param nitrates_raster SpatRaster de la variable qualité prédite (SOC en g/kg)
 #' @param vuln_raster SpatRaster de vulnérabilité
 #' @param watershed Objet sf des bassins versants
 #' @param output_file Chemin pour exporter la carte PNG ou PDF (optionnel)
@@ -8,19 +8,19 @@
 #' @export
 #' @examples
 #' \dontrun{
-#' cartes <- plot_water_quality_map(nitrates_map, vuln, watershed)
+#' cartes <- plot_water_quality_map(soc_map, vuln, watershed)
 #' }
 plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, output_file = NULL) {
 
-  # --- Carte 1 : Nitrates ---
+  # --- Carte 1 : SOC ---
   nitrates_df <- as.data.frame(nitrates_raster, xy = TRUE)
-  names(nitrates_df) <- c("x", "y", "nitrates")
-  nitrates_df <- nitrates_df[!is.na(nitrates_df$nitrates), ]
+  names(nitrates_df) <- c("x", "y", "soc")
+  nitrates_df <- nitrates_df[!is.na(nitrates_df$soc), ]
 
   p1 <- ggplot2::ggplot() +
     ggplot2::geom_raster(
       data = nitrates_df,
-      ggplot2::aes(x = x, y = y, fill = nitrates)
+      ggplot2::aes(x = x, y = y, fill = soc)
     ) +
     ggplot2::scale_fill_gradientn(
       colors = c("darkgreen", "yellow", "orange", "red"),
@@ -33,7 +33,7 @@ plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, outp
       linewidth = 0.8
     ) +
     ggplot2::labs(
-      title = "Soil Organic Carbon prédit (g/kg)",,
+      title = "Soil Organic Carbon prédit (g/kg)",
       x     = "Longitude",
       y     = "Latitude"
     ) +
@@ -98,9 +98,8 @@ plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, outp
       print(p3)
       dev.off()
     } else {
-      # PNG par défaut
       ggplot2::ggsave(
-        paste0(tools::file_path_sans_ext(output_file), "_nitrates.png"),
+        paste0(tools::file_path_sans_ext(output_file), "_soc.png"),
         plot = p1, width = 10, height = 8, dpi = 300
       )
       ggplot2::ggsave(
@@ -123,13 +122,7 @@ plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, outp
 }
 
 
-
-
-
-
-
-
-#' Génération automatique de recommandations de gestion
+#' Génération automatique de recommandations de gestion du SOC
 #'
 #' @param summary_df Dataframe issu de summarize_watersheds
 #' @return Un dataframe avec les recommandations par bassin
@@ -142,9 +135,9 @@ generate_recommendations <- function(summary_df) {
 
   recommandations <- sapply(1:nrow(summary_df), function(i) {
 
-    risk  <- summary_df$risk_class[i]
-    agri  <- summary_df$agriculture_pct[i]
-    soc   <- summary_df$nitrates_mean_mgl[i]
+    risk <- summary_df$risk_class[i]
+    agri <- summary_df$agriculture_pct[i]
+    soc  <- summary_df$nitrates_mean_mgl[i]
 
     if (risk == "Élevé") {
       paste(
@@ -181,8 +174,6 @@ generate_recommendations <- function(summary_df) {
 }
 
 
-
-
 #' Génération d'un rapport HTML ou PDF automatique
 #'
 #' @param eval_result Liste issue de evaluate_model
@@ -201,7 +192,7 @@ generate_report <- function(eval_result, summary_df, cartes, data_info,
 
   template <- '
 ---
-title: "Rapport waterQualSDM - Qualité de leau en bassins versants agricoles"
+title: "Rapport waterQualSDM - Qualité du sol en bassins versants agricoles"
 date: "`r Sys.Date()`"
 output:
   html_document:
@@ -215,7 +206,7 @@ output:
 ```{r echo=FALSE}
 knitr::kable(
   data.frame(
-    Donnée = c("Stations qualité eau", "Bassins versants",
+    Donnée = c("Stations de mesure SOC", "Bassins versants",
                "Occupation du sol", "MNT"),
     Description = c(
       paste0(data_info$n_stations, " stations de mesure"),
@@ -246,13 +237,13 @@ print(eval_result$plot_obs_pred)
 print(eval_result$plot_importance)
 ```
 
-## 3. Carte de la qualité de leau (Nitrates)
+## 3. Carte du Soil Organic Carbon prédit
 
 ```{r echo=FALSE, fig.width=10, fig.height=7}
 print(cartes$carte_nitrates)
 ```
 
-## 4. Carte de vulnérabilité
+## 4. Carte de vulnérabilité au SOC
 
 ```{r echo=FALSE, fig.width=10, fig.height=7}
 print(cartes$carte_vulnerabilite)
@@ -269,11 +260,9 @@ knitr::kable(
 ```
 '
 
-# Écriture du template temporaire
 tmp_rmd <- tempfile(fileext = ".Rmd")
 writeLines(template, tmp_rmd)
 
-# Rendu du rapport
 rmarkdown::render(
   input       = tmp_rmd,
   output_file = output_file,

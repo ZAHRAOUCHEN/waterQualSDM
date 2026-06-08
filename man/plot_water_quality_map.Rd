@@ -2,7 +2,7 @@
 % Please edit documentation in R/visualization.R
 \name{plot_water_quality_map}
 \alias{plot_water_quality_map}
-\title{Cartographie de la qualité de l'eau}
+\title{Cartographie de la qualité du sol et de la vulnérabilité}
 \usage{
 plot_water_quality_map(
   nitrates_raster,
@@ -12,7 +12,7 @@ plot_water_quality_map(
 )
 }
 \arguments{
-\item{nitrates_raster}{SpatRaster des nitrates prédits}
+\item{nitrates_raster}{SpatRaster de la variable qualité prédite (SOC en g/kg)}
 
 \item{vuln_raster}{SpatRaster de vulnérabilité}
 
@@ -24,10 +24,10 @@ plot_water_quality_map(
 Une liste de 3 cartes ggplot2
 }
 \description{
-Cartographie de la qualité de l'eau
+Cartographie de la qualité du sol et de la vulnérabilité
 }
 \examples{
 \dontrun{
-cartes <- plot_water_quality_map(nitrates_map, vuln, watershed)
+cartes <- plot_water_quality_map(soc_map, vuln, watershed)
 }
 }
