@@ -277,3 +277,56 @@ rmarkdown::render(
 message("Rapport généré : ", output_file)
 return(output_file)
 }
+
+#' Distribution du SOC par classe d'occupation du sol
+#'
+#' @param water_quality Dataframe des stations de mesure
+#' @param soc_col Nom de la colonne SOC (défaut: "soc")
+#' @param landuse_col Nom de la colonne occupation du sol (défaut: "landuse")
+#' @return Un objet ggplot2
+#' @export
+#' @examples
+#' \dontrun{
+#' data(water_quality)
+#' plot_soc_distribution(water_quality)
+#' }
+plot_soc_distribution <- function(water_quality,
+                                  soc_col     = "soc",
+                                  landuse_col = "landuse") {
+
+  # Convertir landuse en labels
+  water_quality$landuse_label <- factor(
+    water_quality[[landuse_col]],
+    levels = 1:4,
+    labels = c("Agriculture", "Forêt", "Urbain", "Autre")
+  )
+
+  # Boxplot SOC par occupation du sol
+  p <- ggplot2::ggplot(
+    water_quality,
+    ggplot2::aes(x = landuse_label,
+                 y = .data[[soc_col]],
+                 fill = landuse_label)
+  ) +
+    ggplot2::geom_boxplot(alpha = 0.7) +
+    ggplot2::geom_jitter(width = 0.2, alpha = 0.5, size = 1.5) +
+    ggplot2::scale_fill_manual(
+      values = c(
+        "Agriculture" = "orange",
+        "Forêt"       = "darkgreen",
+        "Urbain"      = "grey50",
+        "Autre"       = "steelblue"
+      )
+    ) +
+    ggplot2::labs(
+      title    = "Distribution du SOC par classe d'occupation du sol",
+      subtitle = "Maroc - SoilGrids 0-5cm",
+      x        = "Occupation du sol",
+      y        = "SOC (g/kg)",
+      fill     = "Occupation du sol"
+    ) +
+    ggplot2::theme_minimal() +
+    ggplot2::theme(legend.position = "none")
+
+  return(p)
+}
