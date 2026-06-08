@@ -133,11 +133,15 @@ alt="Carte des bassins versants" />
 
 ### Évaluation du modèle — Observed vs Predicted
 
+![Observed vs
+Predicted](https://raw.githubusercontent.com/ZAHRAOUCHEN/waterQualSDM/master/man/figures/obs_vs_pred.png)
+\### Distribution du SOC par occupation du sol
+
 <figure>
 <img
-src="https://raw.githubusercontent.com/ZAHRAOUCHEN/waterQualSDM/master/man/figures/obs_vs_pred.png"
-alt="Observed vs Predicted" />
-<figcaption aria-hidden="true">Observed vs Predicted</figcaption>
+src="https://raw.githubusercontent.com/ZAHRAOUCHEN/waterQualSDM/master/man/figures/soc_distribution.png"
+alt="Distribution SOC" />
+<figcaption aria-hidden="true">Distribution SOC</figcaption>
 </figure>
 
 ------------------------------------------------------------------------

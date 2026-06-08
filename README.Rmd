@@ -128,7 +128,9 @@ print(cartes$carte_bassins)
 ### Évaluation du modèle — Observed vs Predicted
 
 ![Observed vs Predicted](https://raw.githubusercontent.com/ZAHRAOUCHEN/waterQualSDM/master/man/figures/obs_vs_pred.png)
+### Distribution du SOC par occupation du sol
 
+![Distribution SOC](https://raw.githubusercontent.com/ZAHRAOUCHEN/waterQualSDM/master/man/figures/soc_distribution.png)
 
 ---
 
