@@ -1,7 +1,7 @@
 #' Entraînement du modèle Random Forest
 #'
 #' @param data_prep Liste issue de preprocess_data
-#' @param target Nom de la colonne cible (défaut: "nitrates")
+#' @param target Nom de la colonne cible (défaut: "soc")
 #' @param ntrees Nombre d'arbres (défaut: 500)
 #' @param tune Logical, effectuer un tuning simple (défaut: TRUE)
 #' @return Une liste avec le modèle et l'importance des variables
@@ -10,8 +10,7 @@
 #' \dontrun{
 #' model <- train_rf_model(data_prep)
 #' }
-train_rf_model <- function(data_prep, target = "nitrates",
-                           ntrees = 500, tune = TRUE) {
+train_rf_model <- function(data_prep, target = "soc", ntrees = 500, tune = TRUE) {
 
   train_data <- data_prep$train
   test_data  <- data_prep$test
@@ -154,7 +153,7 @@ evaluate_model <- function(model_result, data_prep, target = "nitrates") {
       linewidth = 1
     ) +
     ggplot2::labs(
-      title    = "Observed vs Predicted - Nitrates",
+      title = paste0("Observed vs Predicted - ", target),
       subtitle = paste0("R² = ", round(r2, 3), " | RMSE = ", round(rmse, 3)),
       x        = "Observé (mg/L)",
       y        = "Prédit (mg/L)"

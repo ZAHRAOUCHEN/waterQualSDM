@@ -4,12 +4,12 @@
 \alias{train_rf_model}
 \title{Entraînement du modèle Random Forest}
 \usage{
-train_rf_model(data_prep, target = "nitrates", ntrees = 500, tune = TRUE)
+train_rf_model(data_prep, target = "soc", ntrees = 500, tune = TRUE)
 }
 \arguments{
 \item{data_prep}{Liste issue de preprocess_data}
 
-\item{target}{Nom de la colonne cible (défaut: "nitrates")}
+\item{target}{Nom de la colonne cible (défaut: "soc")}
 
 \item{ntrees}{Nombre d'arbres (défaut: 500)}
 
