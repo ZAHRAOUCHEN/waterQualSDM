@@ -6,7 +6,7 @@
 \usage{
 preprocess_data(
   df,
-  target = "nitrates",
+  target = "soc",
   test_size = 0.2,
   normalize = TRUE,
   vif_threshold = 5
@@ -15,7 +15,7 @@ preprocess_data(
 \arguments{
 \item{df}{Dataframe issu de extract_environmental_features}
 
-\item{target}{Nom de la colonne cible (défaut: "nitrates")}
+\item{target}{Nom de la colonne cible (défaut: "soc")}
 
 \item{test_size}{Proportion pour le jeu de test (défaut: 0.2)}
 
@@ -30,7 +30,7 @@ Une liste avec train, test et dataset propre
 Prétraitement des données pour la modélisation
 }
 \examples{
-\dontrun{
-data_prep <- preprocess_data(features, target = "nitrates")
+#' \dontrun{
+data_prep <- preprocess_data(features, target = "soc")
 }
 }

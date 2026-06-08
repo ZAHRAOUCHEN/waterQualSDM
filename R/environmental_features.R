@@ -123,17 +123,17 @@ extract_environmental_features <- function(water_quality, landuse, hydro,
 #' Prétraitement des données pour la modélisation
 #'
 #' @param df Dataframe issu de extract_environmental_features
-#' @param target Nom de la colonne cible (défaut: "nitrates")
+#' @param target Nom de la colonne cible (défaut: "soc")
 #' @param test_size Proportion pour le jeu de test (défaut: 0.2)
 #' @param normalize Logical, normaliser les variables (défaut: TRUE)
 #' @param vif_threshold Seuil VIF pour suppression (défaut: 5)
 #' @return Une liste avec train, test et dataset propre
 #' @export
 #' @examples
-#' \dontrun{
-#' data_prep <- preprocess_data(features, target = "nitrates")
+#' #' \dontrun{
+#' data_prep <- preprocess_data(features, target = "soc")
 #' }
-preprocess_data <- function(df, target = "nitrates", test_size = 0.2,
+preprocess_data <- function(df, target = "soc", test_size = 0.2,
                             normalize = TRUE, vif_threshold = 5) {
 
   # Suppression des NA
