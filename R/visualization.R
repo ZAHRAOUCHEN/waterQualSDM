@@ -1,6 +1,6 @@
 #' Cartographie de la qualité du sol et de la vulnérabilité
 #'
-#' @param nitrates_raster SpatRaster de la variable qualité prédite (SOC en g/kg)
+#' @param quality_raster SpatRaster de la variable qualité prédite (SOC en g/kg)
 #' @param vuln_raster SpatRaster de vulnérabilité
 #' @param watershed Objet sf des bassins versants
 #' @param output_file Chemin pour exporter la carte PNG ou PDF (optionnel)
@@ -10,26 +10,26 @@
 #' \dontrun{
 #' cartes <- plot_water_quality_map(soc_map, vuln, watershed)
 #' }
-plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, output_file = NULL) {
+plot_water_quality_map <- function(quality_raster, vuln_raster, watershed, output_file = NULL) {
 
   # --- Carte 1 : SOC ---
-  nitrates_df <- as.data.frame(nitrates_raster, xy = TRUE)
-  names(nitrates_df) <- c("x", "y", "soc")
-  nitrates_df <- nitrates_df[!is.na(nitrates_df$soc), ]
+  soc_df <- as.data.frame(quality_raster, xy = TRUE)
+  names(soc_df) <- c("x", "y", "soc")
+  soc_df <- soc_df[!is.na(soc_df$soc), ]
 
   p1 <- ggplot2::ggplot() +
     ggplot2::geom_raster(
-      data = nitrates_df,
+      data = soc_df,
       ggplot2::aes(x = x, y = y, fill = soc)
     ) +
     ggplot2::scale_fill_gradientn(
       colors = c("darkgreen", "yellow", "orange", "red"),
-      name = "SOC\n(g/kg)"
+      name   = "SOC\n(g/kg)"
     ) +
     ggplot2::geom_sf(
-      data = watershed,
-      fill = NA,
-      color = "black",
+      data      = watershed,
+      fill      = NA,
+      color     = "black",
       linewidth = 0.8
     ) +
     ggplot2::labs(
@@ -59,9 +59,9 @@ plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, outp
       name   = "Vulnérabilité"
     ) +
     ggplot2::geom_sf(
-      data = watershed,
-      fill = NA,
-      color = "black",
+      data      = watershed,
+      fill      = NA,
+      color     = "black",
       linewidth = 0.8
     ) +
     ggplot2::labs(
@@ -76,7 +76,7 @@ plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, outp
     ggplot2::geom_sf(
       data = watershed,
       ggplot2::aes(fill = area_km2),
-      color = "black",
+      color     = "black",
       linewidth = 0.8
     ) +
     ggplot2::scale_fill_viridis_c(name = "Surface\n(km²)") +
@@ -115,7 +115,7 @@ plot_water_quality_map <- function(nitrates_raster, vuln_raster, watershed, outp
   }
 
   return(list(
-    carte_nitrates      = p1,
+    carte_soc           = p1,
     carte_vulnerabilite = p2,
     carte_bassins       = p3
   ))
@@ -137,7 +137,7 @@ generate_recommendations <- function(summary_df) {
 
     risk <- summary_df$risk_class[i]
     agri <- summary_df$agriculture_pct[i]
-    soc  <- summary_df$nitrates_mean_mgl[i]
+    soc  <- summary_df$soc_mean_gkg[i]
 
     if (risk == "Élevé") {
       paste(
@@ -240,7 +240,7 @@ print(eval_result$plot_importance)
 ## 3. Carte du Soil Organic Carbon prédit
 
 ```{r echo=FALSE, fig.width=10, fig.height=7}
-print(cartes$carte_nitrates)
+print(cartes$carte_soc)
 ```
 
 ## 4. Carte de vulnérabilité au SOC
@@ -253,7 +253,7 @@ print(cartes$carte_vulnerabilite)
 
 ```{r echo=FALSE}
 knitr::kable(
-  summary_df[, c("nitrates_mean_mgl", "agriculture_pct",
+  summary_df[, c("soc_mean_gkg", "agriculture_pct",
                  "risk_class", "recommandations")],
   caption = "Recommandations par bassin versant"
 )

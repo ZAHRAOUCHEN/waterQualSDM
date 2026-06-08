@@ -142,7 +142,7 @@ summarize_watersheds <- function(watershed, nitrates_raster, vuln_raster, landus
 
   # Assemblage
   result <- sf::st_drop_geometry(watershed)
-  result$nitrates_mean_mgl  <- round(nitrates_mean[, 2], 2)
+  result$soc_mean_gkg <- round(nitrates_mean[, 2], 2)
   result$vulnerability_mean <- round(vuln_mean[, 2], 2)
   result$agriculture_pct    <- round(agri_pct[, 2] * 100, 1)
   result$risk_class <- ifelse(

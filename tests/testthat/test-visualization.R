@@ -17,7 +17,7 @@ r <- terra::rast(nrows = 10, ncols = 10,
 # SOC raster
 soc_test <- r
 terra::values(soc_test) <- abs(rnorm(100, 25, 10))
-names(soc_test) <- "nitrates_predicted"
+names(soc_test) <- "soc_predicted"
 
 # Vulnerability raster
 vuln_test <- r
@@ -43,11 +43,11 @@ watershed_test <- sf::st_sf(
 
 # Summary dataframe
 summary_test <- data.frame(
-  NAME_1            = c("Region1", "Region2"),
-  nitrates_mean_mgl = c(25.5, 35.2),
+  NAME_1             = c("Region1", "Region2"),
+  soc_mean_gkg       = c(25.5, 35.2),
   vulnerability_mean = c(0.4, 0.7),
-  agriculture_pct   = c(45.0, 60.0),
-  risk_class        = c("Moyen", "Élevé")
+  agriculture_pct    = c(45.0, 60.0),
+  risk_class         = c("Moyen", "Élevé")
 )
 
 # ============================================================
@@ -56,31 +56,31 @@ summary_test <- data.frame(
 
 test_that("plot_water_quality_map retourne une liste", {
   result <- plot_water_quality_map(
-    nitrates_raster = soc_test,
-    vuln_raster     = vuln_test,
-    watershed       = watershed_test
+    quality_raster = soc_test,
+    vuln_raster    = vuln_test,
+    watershed      = watershed_test
   )
   expect_type(result, "list")
 })
 
 test_that("plot_water_quality_map retourne 3 cartes", {
   result <- plot_water_quality_map(
-    nitrates_raster = soc_test,
-    vuln_raster     = vuln_test,
-    watershed       = watershed_test
+    quality_raster = soc_test,
+    vuln_raster    = vuln_test,
+    watershed      = watershed_test
   )
-  expect_true("carte_nitrates" %in% names(result))
+  expect_true("carte_soc" %in% names(result))
   expect_true("carte_vulnerabilite" %in% names(result))
   expect_true("carte_bassins" %in% names(result))
 })
 
 test_that("plot_water_quality_map cartes sont des ggplot", {
   result <- plot_water_quality_map(
-    nitrates_raster = soc_test,
-    vuln_raster     = vuln_test,
-    watershed       = watershed_test
+    quality_raster = soc_test,
+    vuln_raster    = vuln_test,
+    watershed      = watershed_test
   )
-  expect_s3_class(result$carte_nitrates, "ggplot")
+  expect_s3_class(result$carte_soc, "ggplot")
   expect_s3_class(result$carte_vulnerabilite, "ggplot")
   expect_s3_class(result$carte_bassins, "ggplot")
 })

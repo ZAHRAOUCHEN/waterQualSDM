@@ -5,14 +5,14 @@
 \title{Cartographie de la qualité du sol et de la vulnérabilité}
 \usage{
 plot_water_quality_map(
-  nitrates_raster,
+  quality_raster,
   vuln_raster,
   watershed,
   output_file = NULL
 )
 }
 \arguments{
-\item{nitrates_raster}{SpatRaster de la variable qualité prédite (SOC en g/kg)}
+\item{quality_raster}{SpatRaster de la variable qualité prédite (SOC en g/kg)}
 
 \item{vuln_raster}{SpatRaster de vulnérabilité}
 

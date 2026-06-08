@@ -64,7 +64,7 @@ test_that("predict_water_quality retourne une couche nommée", {
     landuse      = landuse_test,
     hydro        = c(slope_test, altitude_test, precip_test)
   )
-  expect_equal(names(result), "nitrates_predicted")
+  expect_equal(names(result), "soc_predicted")
 })
 
 test_that("predict_water_quality valeurs positives", {
@@ -157,7 +157,7 @@ test_that("summarize_watersheds contient les bonnes colonnes", {
     crs = 4326
   )
   result <- summarize_watersheds(ws, soc_map, vuln_map, landuse_test)
-  expect_true("nitrates_mean_mgl" %in% names(result))
+  expect_true("soc_mean_gkg" %in% names(result))
   expect_true("vulnerability_mean" %in% names(result))
   expect_true("agriculture_pct" %in% names(result))
   expect_true("risk_class" %in% names(result))
