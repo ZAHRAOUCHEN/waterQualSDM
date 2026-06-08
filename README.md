@@ -4,8 +4,9 @@
 ## Modélisation de la qualité de l’eau en bassins versants agricoles
 
 `waterQualSDM` est un package R qui permet d’analyser et modéliser la
-qualité de l’eau dans les bassins versants agricoles, avec un focus sur
-les **concentrations en nitrates**.
+qualité du sol dans les bassins versants agricoles au Maroc, avec un
+focus sur le **Soil Organic Carbon (SOC)** comme indicateur de qualité
+environnementale.
 
 ------------------------------------------------------------------------
 
@@ -14,7 +15,8 @@ les **concentrations en nitrates**.
 - **Import** des données qualité eau, occupation du sol, MNT et bassins
   versants
 - **Calcul** des variables environnementales spatiales
-- **Modélisation** par Random Forest pour prédire les nitrates
+- **Modélisation** par Random Forest pour prédire le Soil Organic Carbon
+  (SOC)
 - ️ **Cartographie** des zones vulnérables à la pollution
 - **Recommandations** automatiques de gestion durable
 
@@ -59,8 +61,9 @@ hydro    <- calculate_hydrological_variables(dem, rivers, watershed)
 features <- extract_environmental_features(wq_data$sf, landuse, hydro)
 
 # Exclure les variables non spatiales
-features_spatial <- features[, !names(features) %in% 
-                               c("phosphates", "station_id", "date")]
+features_spatial <- features[, c("soc", "landuse", "slope", 
+                                  "altitude", "precipitation")]
+features_spatial <- features_spatial[, !duplicated(names(features_spatial))]]
 
 # 3. Prétraitement
 data_prep <- preprocess_data(features_spatial, target = "soc")
@@ -97,7 +100,7 @@ print(cartes$carte_bassins)
 > > depuis SoilGrids (0-5cm, g/kg) - **Occupation du sol** : ESA World
 > > Cover (arbres, cultures, urbain) - **Topographie** : SRTM 30s
 > > (altitude et pente) - **Précipitations** : WorldClim 2.5min
-> > (précipitations annuelles) - **Zone d’étude** : Maroc incluant la
+> > (précipitations annuelles) - **Zone d’étude** : Maroc incluant le
 > > Sahara Occidental (source : GADM) - **Stations de mesure** : 200
 > > points d’échantillonnage - **Performances du modèle** : R² = 0.82,
 > > RMSE = 5.66 g/kg
@@ -165,6 +168,7 @@ alt="Distribution SOC" />
 | `generate_recommendations()` | Recommandations de gestion |
 | `plot_water_quality_map()` | Cartographie qualité eau et vulnérabilité |
 | `generate_report()` | Rapport HTML/PDF automatique |
+| `plot_soc_distribution()` | Distribution du SOC par occupation du sol |
 
 ------------------------------------------------------------------------
 
@@ -177,7 +181,7 @@ alt="Distribution SOC" />
     │   ├── modeling.R
     │   ├── prediction.R
     │   └── visualization.R
-    ├── data/                     # Données simulées (.rda)
+    ├── data/                     # Données réelles du Maroc (.rda)
     ├── data-raw/                 # Script de génération des données
     ├── inst/extdata/             # Fichiers exemples
     ├── tests/testthat/           # Tests unitaires
@@ -190,18 +194,15 @@ alt="Distribution SOC" />
 
 ## Données d’exemple
 
-Le package inclut des données simulées pour tester toutes les fonctions
-:
+Le package inclut des données environnementales réelles du Maroc :
 
 ``` r
 library(waterQualSDM)
-
-# Charger les données d'exemple
-data(water_quality)
-data(watershed_sf)
-data(rivers_sf)
-
-# Aperçu des stations de mesure
+# Charger les données réelles du Maroc
+data(water_quality)   # 200 stations SOC - SoilGrids
+data(watershed_sf)    # Régions administratives du Maroc - GADM
+data(rivers_sf)       # Cours d'eau simulés
+# Aperçu des stations de mesure SOC
 head(water_quality)
 ```
 
