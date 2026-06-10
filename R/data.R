@@ -1,4 +1,4 @@
-#' Données de qualité du sol simulées pour le Maroc
+#' Données de qualité du sol pour le Maroc
 #'
 #' Un jeu de données contenant les mesures de Soil Organic Carbon (SOC)
 #' pour 200 stations d'échantillonnage au Maroc, extraites depuis
@@ -34,7 +34,7 @@
 "watershed_sf"
 
 
-#' Cours d'eau simulés
+#' Cours d'eau 
 #'
 #' Un objet sf contenant 2 cours d'eau fictifs pour démonstration.
 #'
